@@ -39,21 +39,24 @@ words = [r"([0-9a-zÀ-ž]+([’'][a-zçğıöşü]+)?)"]
 
 suff = [r"(?<=')([a-zÀ-ž]+)"]
 
-end_of_seq = [r"(\?\.\.)|(!\.\.)|(\.\.\.)|(\?)|(!)|(:)|(\.)"]
+#end_of_seq = [r"(\?\.\.)|(!\.\.)|(\.\.\.)|(\?)|(!)|(:)|(\.)"]
+end_of_seq = [r'(\?\.\.)|(!\.\.)|(\.\.\.)|(\?)|(!)|(:)|(\.)|(\.\")']
 
 punch = [r"[^\w\s]"]
 
-all_regex = [(fin_rgx, 'financial'),
-             (date_rgx, 'date'),
-             (time_rgx, 'time'),
-             (phone_rgx, 'phone'),
-             (web_rgx, 'web'),
-             (th_rgx, 'th'),
-             (nbr_rgx, 'number'),
-             (proper_noun_abbr, 'proabbr'),
-             (end_of_seq, 'eos'),
-             (words, 'word'),
-             (suff, 'suffix'),
-             (enter_regex, 'enter'),
-             (space_regex, 'space'),
-             (punch, 'punch')]
+all_regex = [
+        (fin_rgx, 'financial'),
+        (date_rgx, 'date'),
+        (time_rgx, 'time'),
+        (phone_rgx, 'phone'),
+        (web_rgx, 'web'),
+        (th_rgx, 'th'),
+        (nbr_rgx, 'number'),
+        (proper_noun_abbr, 'proabbr'),
+        (end_of_seq, 'eos'),
+        (words, 'word'),
+        (suff, 'suffix'),
+        (enter_regex, 'enter'),
+        (space_regex, 'space'),
+        (punch, 'punch')
+        ]
