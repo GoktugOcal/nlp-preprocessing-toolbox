@@ -6,7 +6,6 @@ import re
 class Tokenization:
     def __init__(self, text):
         self.text = text
-        self.parsed_text = ""
         self.tokens = []
         self.spans = []
         self.types = []
@@ -23,7 +22,7 @@ class Tokenization:
             if splitted_text[idx].endswith("-"):
                 next_item = splitted_text[idx+1].split(" ")
                 splitted_text[idx] = splitted_text[idx].replace("-",next_item[0])
-                splitted_text[idx + 1] = splitted_text[idx + 1].replace(next_item[0],"").lstrip()
+                splitted_text[idx + 1] = splitted_text[idx + 1].replace(next_item[0],"")
         
         self.text = "\n".join(splitted_text)
 

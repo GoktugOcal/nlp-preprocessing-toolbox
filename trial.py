@@ -1,4 +1,6 @@
 from nlp_preprocessing_toolbox.tokenization import Tokenization
+from nlp_preprocessing_toolbox.sentence_splitter import SentenceSplitter
+
 
 
 text = '''Saçma ve Gereksiz Bir Yazı.
@@ -20,12 +22,21 @@ ta al.'''
 
 #with open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-test.txt", encoding="utf-8") as f:
 #    text = f.read()
-
+'''
 tokenizer = Tokenization(text)
-
 tokenizer.run()
 print(tokenizer.spans)
 print()
 print(tokenizer.tokens)
+
+print('Done.')
+'''
+
+tokenizer = Tokenization(text)
+splitter = SentenceSplitter(text)
+splitter.run(tokenizer)
+print(splitter.sentences)
+print(splitter.sentences_types)
+
 
 print('Done.')
