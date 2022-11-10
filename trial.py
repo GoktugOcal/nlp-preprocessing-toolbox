@@ -14,7 +14,7 @@ adresinden sitemizi inceleyebilirsin. 24 Eylül 2018 Pazartesi günü ge-
 lecekmiş. 19 Mayıs'ı coşkuyla kutladık.
 Sonra dedi ki "Ben seni sevmiyorum."'''
 
-text = '''Sçma ve Gereksiz Bir Yazı.
+text = '''Saçma ve Gereksiz Bir Yazı.
 Bakkaldan 5 TL'lik 2 çikola-
 
 ta al.'''
@@ -41,5 +41,6 @@ print(splitter.sentences_types)
 normalizer = Normalizer()
 normalizer.setText(text)
 normalizer.run()
+print(normalizer.new_words)
 
 print('Done.')

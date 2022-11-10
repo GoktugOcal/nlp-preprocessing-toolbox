@@ -6,11 +6,13 @@ from itertools import product, groupby
 import bz2
 import pickle
 import re
+import numpy as np
 
 class Normalizer():
     def __init__(self):
         self.text = ""
         self.word_list = []
+        self.new_words = []
         self.load_freq_dict()
 
     def load_freq_dict(self):
@@ -50,18 +52,30 @@ class Normalizer():
         
         return [''.join(x) for x in product(*result)]
         
-    def __known(self, words):
+    def find_known(self, words):
         known_list = []
+        freq_list = []
         for w in words:
             if w in self.freq_dict:
                 known_list.append(w)
-        return known_list
+                freq_list.append(self.freq_dict[w])
+        return dict(zip(known_list, freq_list))
 
     def run(self):
 
         for word in self.word_list:
             variations = self.createVariations(word.lower())
-            print(variations)
-            #print(word, " - ", self.__known([word.lower()]))
+            known = self.find_known(variations)
+            similars = []
 
+            for x in known.items():
+                edit_dist = levenshtein_distance(word, x[0])
+                similars.append((x[0], edit_dist, x[1]))
 
+            if similars:
+                sorted_list = sorted(similars, key= lambda x: x[1])
+                new_word = sorted(list(filter(lambda x: x[1]== sorted_list[0][1], sorted_list)), key= lambda x: x[1])[0]
+                self.new_words.append(new_word[0])
+
+            else:
+                self.new_words.append(word)
