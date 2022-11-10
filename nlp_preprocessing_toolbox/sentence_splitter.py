@@ -1,4 +1,4 @@
-from nlp_preprocessing_toolbox.tokenization import Tokenization
+from nlp_preprocessing_toolbox import *
 from nlp_preprocessing_toolbox.data.regex_patterns import *
 from nlp_preprocessing_toolbox.helper import *
 import numpy as np
@@ -35,10 +35,9 @@ class SentenceSplitter:
         
     def run(self, tokenizer=None):
 
-        if tokenizer == None:
-            tokenizer = Tokenization(self.text)
-            tokenizer.run()
+        if tokenizer == None: tokenizer = Tokenizer()
 
+        tokenizer.setText(self.text)
         tokenizer.run()
         temp_sentence = []
         temp_sentences_types = []

@@ -1,6 +1,6 @@
-from nlp_preprocessing_toolbox.tokenization import Tokenization
+from nlp_preprocessing_toolbox.tokenizer import Tokenizer
 from nlp_preprocessing_toolbox.sentence_splitter import SentenceSplitter
-
+from nlp_preprocessing_toolbox.normalizer import Normalizer
 
 
 text = '''Saçma ve Gereksiz Bir Yazı.
@@ -14,7 +14,7 @@ adresinden sitemizi inceleyebilirsin. 24 Eylül 2018 Pazartesi günü ge-
 lecekmiş. 19 Mayıs'ı coşkuyla kutladık.
 Sonra dedi ki "Ben seni sevmiyorum."'''
 
-text = '''Saçma ve Gereksiz Bir Yazı.
+text = '''Sçma ve Gereksiz Bir Yazı.
 Bakkaldan 5 TL'lik 2 çikola-
 
 ta al.'''
@@ -23,20 +23,23 @@ ta al.'''
 #with open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-test.txt", encoding="utf-8") as f:
 #    text = f.read()
 '''
-tokenizer = Tokenization(text)
+tokenizer = Tokenizer()
+tokenizer.setText(text)
 tokenizer.run()
 print(tokenizer.spans)
 print()
 print(tokenizer.tokens)
 
-print('Done.')
-'''
 
-tokenizer = Tokenization(text)
+tokenizer = Tokenizer()
 splitter = SentenceSplitter(text)
 splitter.run(tokenizer)
 print(splitter.sentences)
 print(splitter.sentences_types)
+'''
 
+normalizer = Normalizer()
+normalizer.setText(text)
+normalizer.run()
 
 print('Done.')
