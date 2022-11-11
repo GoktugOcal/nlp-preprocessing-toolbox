@@ -14,7 +14,7 @@ adresinden sitemizi inceleyebilirsin. 24 Eylül 2018 Pazartesi günü ge-
 lecekmiş. 19 Mayıs'ı coşkuyla kutladık.
 Sonra dedi ki "Ben seni sevmiyorum."'''
 
-text = '''Sçma ve Gereksiz Bir Yazı.
+text = '''Saçma ve Gereksiz Bir Yazı.
 Bakkaldan 5 TL'lik 2 çikola-
 
 ta al.'''
@@ -38,8 +38,24 @@ print(splitter.sentences)
 print(splitter.sentences_types)
 '''
 
-normalizer = Normalizer()
-normalizer.setText(text)
-normalizer.run()
+# normalizer = Normalizer()
+# normalizer.setText(text)
+# normalizer.run()
+# print(normalizer.new_words)
 
-print('Done.')
+# print('Done.')
+
+from conllu import parse_incr, parse
+
+data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-train.conllu", "r", encoding="utf-8")
+text = data_file.read()
+
+print(text)
+
+# i=0
+# for tokenlist in parse_incr(data_file):
+#     tok = tokenlist.to_tree().children
+#     print(tok)
+
+#     i = i + 1
+#     if i > 0: break
