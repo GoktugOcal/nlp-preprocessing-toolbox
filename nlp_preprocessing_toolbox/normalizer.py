@@ -21,15 +21,17 @@ class Normalizer():
         self.freq_dict = data
 
     def setText(self, text, tokenizer=None):
-        
-        self.text = text
 
         if tokenizer == None:
             tokenizer = Tokenizer()
 
-        tokenizer.setText(text)
-        tokenizer.run()
-        self.word_list = tokenizer.tokens
+        if type(text) == list:
+            self.word_list = text
+
+        elif type(text) == str:
+            self.word_list = tokenizer.setText(text).run().tokens
+
+        self.run()
 
     def createVariations(self, word):
 

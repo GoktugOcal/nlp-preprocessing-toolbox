@@ -1,6 +1,8 @@
 from nlp_preprocessing_toolbox.tokenizer import Tokenizer
 from nlp_preprocessing_toolbox.sentence_splitter import SentenceSplitter
 from nlp_preprocessing_toolbox.normalizer import Normalizer
+from nlp_preprocessing_toolbox.stemmer import Stemmer
+from nlp_preprocessing_toolbox.stopword_elimination import stopword_elimination
 
 
 text = '''Saçma ve Gereksiz Bir Yazı.
@@ -19,43 +21,20 @@ Bakkaldan 5 TL'lik 2 çikola-
 
 ta al.'''
 
-
-#with open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-test.txt", encoding="utf-8") as f:
-#    text = f.read()
-'''
 tokenizer = Tokenizer()
 tokenizer.setText(text)
 tokenizer.run()
-print(tokenizer.spans)
-print()
-print(tokenizer.tokens)
+words = tokenizer.tokens
+print("Tokenization :",words)
 
+normalizer = Normalizer()
+normalizer.setText(words)
+words = normalizer.new_words
+print("Normalization :",words)
 
-tokenizer = Tokenizer()
-splitter = SentenceSplitter(text)
-splitter.run(tokenizer)
-print(splitter.sentences)
-print(splitter.sentences_types)
-'''
+stemmer = Stemmer()
+stemmer.setText(words)
+print("Stemming :",words)
 
-# normalizer = Normalizer()
-# normalizer.setText(text)
-# normalizer.run()
-# print(normalizer.new_words)
-
-# print('Done.')
-
-from conllu import parse_incr, parse
-
-data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-train.conllu", "r", encoding="utf-8")
-text = data_file.read()
-
-print(text)
-
-# i=0
-# for tokenlist in parse_incr(data_file):
-#     tok = tokenlist.to_tree().children
-#     print(tok)
-
-#     i = i + 1
-#     if i > 0: break
+words = stopword_elimination(stemmer.stems)
+print("Stopword :",words)

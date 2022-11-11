@@ -1,98 +1,9 @@
 # from nlp_preprocessing_toolbox.helper import *
-
+from nlp_preprocessing_toolbox.data.roots import *
+from nlp_preprocessing_toolbox.data.suffixes import *
 import re
 
-class Suffix(object):
-    def __init__(self, name, pattern, optionalLetter, checkHarmony):
-        self.name = name
-        self.pattern = re.compile("(" + pattern + ")$", re.UNICODE)
-
-        if optionalLetter is None:
-            self.optionalLetterCheck = False
-            self._optionalLetterPattern = None
-        else:
-            self.optionalLetterCheck = True
-            self._optionalLetterPattern = re.compile("(" + optionalLetter + ")$", re.UNICODE)
-
-        self.checkHarmony = checkHarmony
-
-    def Match(self, word):
-        return self.pattern.search(word)
-
-    def OptionalLetter(self, word):
-        if self.optionalLetterCheck:
-            match = self._optionalLetterPattern.search(word)
-            if match:
-                return match.group()
-
-    def RemoveSuffix(self, word):
-        return self.pattern.sub("", word)
-
-    @property
-    def CheckHarmony(self):
-        return self.checkHarmony
-
-
-#############################################
-
-S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
-
-DERIVATIONAL_SUFFIXES = (S1, )
-
-#############################################
-
-S11 = Suffix("-cAsInA",    "casına|çasına|cesine|çesine",      None, True)
-S4  = Suffix("-sUnUz",     "sınız|siniz|sunuz|sünüz",          None, True)
-S14 = Suffix("-(y)mUş",    "muş|miş|müş|mış",                  "y",  True)
-S15 = Suffix("-(y)ken",    "ken",                              "y",  True)
-S2  = Suffix("-sUn",       "sın|sin|sun|sün",                  None, True)
-S5  = Suffix("-lAr",       "lar|ler",                          None, True)
-S9  = Suffix("-nUz",       "nız|niz|nuz|nüz",                  None, True)
-S10 = Suffix("-DUr",       "tır|tir|tur|tür|dır|dir|dur|dür",  None, True)
-S3  = Suffix("-(y)Uz",     "ız|iz|uz|üz",                      "y",  True)
-S1  = Suffix("-(y)Um",     "ım|im|um|üm",                      "y",  True)
-S12 = Suffix("-(y)DU",     "dı|di|du|dü|tı|ti|tu|tü",          "y",  True)
-S13 = Suffix("-(y)sA",     "sa|se",                            "y",  True)
-S6  = Suffix("-m",         "m",                                None, True)
-S7  = Suffix("-n",         "n",                                None, True)
-S8  = Suffix("-k",         "k",                                None, True)
-
-# The order of the enum definition determines the priority of the suffix.
-# For example, -(y)ken (S15 suffix) is  checked before -n (S7 suffix).
-NOMINAL_VERB_SUFFIXES = (S11,S4,S14,S15,S2,S5,S9,S10,S3,S1,S12,S13,S6,S7,S8)
-
-
-
-#############################################
-
-
-S16 = Suffix("-nDAn",     "ndan|ntan|nden|nten",      None,       True)
-S7  = Suffix("-lArI",     "ları|leri",                None,       True)
-S3  = Suffix("-(U)mUz",   "mız|miz|muz|müz",          "ı|i|u|ü",  True) 
-S5  = Suffix("-(U)nUz",   "nız|niz|nuz|nüz",          "ı|i|u|ü",  True) 
-S1  = Suffix("-lAr",      "lar|ler",                  None,       True)
-S14 = Suffix("-nDA",      "nta|nte|nda|nde",          None,       True)
-S15 = Suffix("-DAn",      "dan|tan|den|ten",          None,       True)
-S17 = Suffix("-(y)lA",    "la|le",                    "y",        True)
-S10 = Suffix("-(n)Un",    "ın|in|un|ün",              "n",        True)
-S19 = Suffix("-(n)cA",    "ca|ce",                    "n",        True)
-S4  = Suffix("-Un",       "ın|in|un|ün",              None,       True)
-S9  = Suffix("-nU",       "nı|ni|nu|nü",              None,       True) 
-S12 = Suffix("-nA",       "na|ne",                    None,       True)
-S13 = Suffix("-DA",       "da|de|ta|te",              None,       True)
-S18 = Suffix("-ki",       "ki",                       None,       False)
-S2  = Suffix("-(U)m",     "m",                        "ı|i|u|ü",  True)
-S6  = Suffix("-(s)U",     "ı|i|u|ü",                  "s",        True)
-S8  = Suffix("-(y)U",     "ı|i|u|ü",                  "y",        True)
-S11 = Suffix("-(y)A",     "a|e",                      "y",        True)
-
-# The order of the enum definition determines the priority of the suffix.
-# For example, -(y)ken (S15 suffix) is  checked before -n (S7 suffix).
-NOUN_SUFFIXES = (S16,S7,S3,S5,S1,S14,S15,S17,S10,S19,S4,S9,S12,S13,S18,S2,S6,S8,S11)
-
-#############################################
-
-
+'''
 import io
 f = io.open("nlp_preprocessing_toolbox/data/suffixes.txt", mode="r", encoding="utf-8")
 txt = f.read()
@@ -111,45 +22,71 @@ for item in suffix_dict.items():
     suffix_list.append(item)
 
 suffix_list = sorted(suffix_list, key = lambda x: x[1][0])
-print(suffix_list)
 SUFFIXES = []
 for item in suffix_dict.items():
     SUFFIXES.append(Suffix(item[1], item[0].replace("-",""), None, False))
-print(suffix_dict)
+'''
 
 class State:
-    def __init__(self, word, suffix, nextState = None):
+    def __init__(self, word, suffix):
         self.word = word
         self.suffix = suffix
-        self.nextState = nextState
-
-words = ["hayran"]
-suffixes = []
-for word in words:
-    # for suff_type in [SUFFIXES]:
-    for suff_type in [DERIVATIONAL_SUFFIXES, NOMINAL_VERB_SUFFIXES, NOUN_SUFFIXES]:
+        self.parent = None
         
-        for suff in suff_type:
-            match = suff.Match(word)
-            if match != None:
-                print(match)
-                # print(suff.name)
-                suffixes.append((match.group(), match.span()))
-                word = suff.RemoveSuffix(word)
-                words.append(word)
+    def setChild(self, state):
+        self.parent = state
+    
+    def findStem(self, suffix_list, stem_list, i):
 
-suffixes = sorted(suffixes, key=lambda x: x[1][0])
-print([word] + suffixes)
+        if self.word in stem_list:
+            return self.word
 
+        stems = []
+        for suff_type in suffix_list:
+            for suff in suff_type:
+                match = suff.Match(self.word)
+                if match != None:
+                    new_word = suff.RemoveSuffix(self.word)
+                    new_state = State(new_word, match.group())
+                    stem = new_state.findStem(suffix_list, stem_list, i+1)
+                    stems.append(stem)
+        
+        stems = [stem for stem in stems if stem != None]
+        stems = sorted(stems, key = lambda x: len(x))
+        if stems: return stems[0]
+        else: return None
 
+#########################
 
-# 0- o
-# 1- k
-# 2- u
-# 3- l
-# 4- d
-# 5- a
-# 6- y
-# 7- k
-# 8- e
-# 9- n    
+class Stemmer:
+    def __init__(self):
+        self.words = None
+        self.suffixes = self.load_suffixes()
+        self.roots = self.load_roots()
+    
+    def load_suffixes(self):
+        return [DERIVATIONAL_SUFFIXES, NOMINAL_VERB_SUFFIXES, NOUN_SUFFIXES]
+
+    def load_roots(self):
+        return roots
+        
+    def setText(self, text):
+        if type(text) == list: 
+            stems = []
+            for word in text:
+                word = word.lower()
+                initial_state = State(word, None)
+                stem = initial_state.findStem(self.suffixes, self.roots, 1)
+                if stem == None: stems.append(word)
+                else: stems.append(stem)
+            self.stems = stems
+
+        elif type(text) == str:
+            text = text.lower()
+            initial_state = State(text, None)
+            stem = initial_state.findStem(self.suffixes, self.roots, 1)
+            if stem == None: self.stems = text
+            else: self.stems = stem
+        
+        else:
+            raise TypeError("text type is not supported. text should be list or string.")
