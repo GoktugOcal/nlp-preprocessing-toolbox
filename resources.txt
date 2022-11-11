@@ -1,0 +1,15 @@
+https://www.researchgate.net/profile/Hayri-Sever/publication/221580146_FindStem_Analysis_and_Evaluation_of_a_Turkish_Stemming_Algorithm/links/0fcfd50e343a2ae98c000000/FindStem-Analysis-and-Evaluation-of-a-Turkish-Stemming-Algorithm.pdf
+
+https://github.com/brolin59/trnlp
+
+https://universaldependencies.org/
+
+https://cromwell-intl.com/turkish/turkish-suffixes.html
+
+https://github.com/agmmnn/turkish-nlp-resources
+
+https://tdd.ai/
+
+https://github.com/ahmetax/trstop
+
+https://www.dnathan.com/language/turkish/tsd/
