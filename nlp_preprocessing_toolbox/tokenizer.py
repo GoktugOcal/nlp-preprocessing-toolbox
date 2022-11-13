@@ -25,7 +25,9 @@ class Tokenizer:
             if splitted_text[idx].endswith("-"):
                 next_item = splitted_text[idx+1].split(" ")
                 splitted_text[idx] = splitted_text[idx].replace("-",next_item[0])
-                splitted_text[idx + 1] = splitted_text[idx + 1].replace(next_item[0],"")
+                splitted_text[idx + 1] = splitted_text[idx + 1][len(next_item[0]):]
+                print(next_item[0])
+                #.replace(next_item[0],"")
         
         self.text = "\n".join(splitted_text)
 

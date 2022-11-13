@@ -1,4 +1,4 @@
-from nlp_preprocessing_toolbox import *
+from nlp_preprocessing_toolbox.tokenizer import *
 from nlp_preprocessing_toolbox.data.regex_patterns import *
 from nlp_preprocessing_toolbox.helper import *
 import numpy as np

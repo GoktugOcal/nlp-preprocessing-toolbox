@@ -36,6 +36,7 @@ class Normalizer():
     def createVariations(self, word):
 
         a1 = ['', 'a', 'e', 'ı', 'i', 'o', 'ö', 'u', 'ü']
+        numbers = ["1","2","3","4","5","6","7","8","9","0"]
 
         if word[0] in allVowels:
             result = [word[0]]
@@ -46,19 +47,21 @@ class Normalizer():
             fl = word[i - 1]
             fs = word[i]
 
-            if (fl not in allVowels) and (fs not in allVowels):
+            if (fl not in allVowels) and (fs not in allVowels) and (fl in allLowerLetters) and (fs in allLowerLetters):
                 result.append(a1)
                 result.append(fs)
             else:
                 result.append(fs)
-        
+     
         return [''.join(x) for x in product(*result)]
         
     def find_known(self, words):
         known_list = []
         freq_list = []
         for w in words:
+            print(w)
             if w in self.freq_dict:
+                print("\tIN.")
                 known_list.append(w)
                 freq_list.append(self.freq_dict[w])
         return dict(zip(known_list, freq_list))
@@ -69,7 +72,7 @@ class Normalizer():
             variations = self.createVariations(word.lower())
             known = self.find_known(variations)
             similars = []
-
+            
             for x in known.items():
                 edit_dist = levenshtein_distance(word, x[0])
                 similars.append((x[0], edit_dist, x[1]))

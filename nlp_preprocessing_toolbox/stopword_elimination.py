@@ -4,6 +4,7 @@ def stopword_elimination(text_list):
 
     res = requests.get('https://raw.githubusercontent.com/ahmetax/trstop/master/dosyalar/turkce-stop-words')
     stopword_list = res.text.split("\n")
+    stopword_list.append(" ")
 
     eliminated_list = []
     
