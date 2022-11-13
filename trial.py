@@ -40,8 +40,6 @@ ta al. 12.02.2018 tarihinde saat tam 15:45'te yap-
 malıyız bu işi. Tamam mı? Benimle goktugocal41@gmail.com 
 adresinden iletişime geçebilirsin.'''
 
-text="Tamam mı?"
-
 
 tokenizer = Tokenizer()
 tokenizer.setText(text)

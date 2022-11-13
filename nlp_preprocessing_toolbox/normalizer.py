@@ -8,6 +8,14 @@ import pickle
 import re
 import numpy as np
 
+deascii_dict = {'c': ['c', 'ç'],
+                'g': ['g', 'ğ'],
+                'i': ['ı', 'i'],
+                'ı': ['ı', 'i'],
+                'o': ['o', 'ö'],
+                's': ['s', 'ş'],
+                'u': ['u', 'ü']}
+
 class Normalizer():
     def __init__(self):
         self.text = ""
@@ -35,6 +43,8 @@ class Normalizer():
 
     def createVariations(self, word):
 
+        if word[0] not in allLowerLetters: return word
+
         a1 = ['', 'a', 'e', 'ı', 'i', 'o', 'ö', 'u', 'ü']
         numbers = ["1","2","3","4","5","6","7","8","9","0"]
 
@@ -49,9 +59,11 @@ class Normalizer():
 
             if (fl not in allVowels) and (fs not in allVowels) and (fl in allLowerLetters) and (fs in allLowerLetters):
                 result.append(a1)
-                result.append(fs)
+                if fs in deascii_dict.keys(): result.append(deascii_dict[fs])
+                else: result.append(fs)
             else:
-                result.append(fs)
+                if fs in deascii_dict.keys(): result.append(deascii_dict[fs])
+                else: result.append(fs)
      
         return [''.join(x) for x in product(*result)]
         
@@ -59,9 +71,7 @@ class Normalizer():
         known_list = []
         freq_list = []
         for w in words:
-            print(w)
             if w in self.freq_dict:
-                print("\tIN.")
                 known_list.append(w)
                 freq_list.append(self.freq_dict[w])
         return dict(zip(known_list, freq_list))
