@@ -27,22 +27,30 @@ for item in suffix_dict.items():
     SUFFIXES.append(Suffix(item[1], item[0].replace("-",""), None, False))
 '''
 
+suff_type_idx = {
+    0 : "Derivational",
+    1 : "Inflectional",
+    2 : "Inflectional"
+}
+
 class State:
     def __init__(self, word, suffix):
         self.word = word
         self.suffix = suffix
         self.parent = None
+        self.type = None
         
     def setChild(self, state):
         self.parent = state
     
     def findStem(self, suffix_list, stem_list, i):
 
-        if self.word in stem_list:
-            return self.word
+        if self.word in stem_list.keys():
+            return (self.word, stem_list[self.word])
 
         stems = []
-        for suff_type in suffix_list:
+        for i in range(len(suffix_list)):
+            suff_type = suffix_list[i]
             for suff in suff_type:
                 match = suff.Match(self.word)
                 if match != None:
@@ -52,7 +60,7 @@ class State:
                     stems.append(stem)
         
         stems = [stem for stem in stems if stem != None]
-        stems = sorted(stems, key = lambda x: len(x))
+        stems = sorted(stems, key = lambda x: x[1], reverse=True)
         if stems: return stems[0]
         else: return None
 
@@ -76,7 +84,9 @@ class Stemmer:
             for word in text:
                 word = word.lower()
                 initial_state = State(word, None)
-                stem = initial_state.findStem(self.suffixes, self.roots, 1)
+                stem_freq = initial_state.findStem(self.suffixes, self.roots, 1)
+                if stem_freq: stem = stem_freq[0]
+                else: stem = None
                 if stem == None: stems.append(word)
                 else: stems.append(stem)
             self.stems = stems
@@ -84,7 +94,9 @@ class Stemmer:
         elif type(text) == str:
             text = text.lower()
             initial_state = State(text, None)
-            stem = initial_state.findStem(self.suffixes, self.roots, 1)
+            stem_freq = initial_state.findStem(self.suffixes, self.roots, 1)
+            if stem_freq: stem = stem_freq[0]
+            else: stem = None
             if stem == None: self.stems = text
             else: self.stems = stem
         
