@@ -12,7 +12,16 @@ class Suffix(object):
         return self.pattern.sub("", word)
 
 S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
-DERIVATIONAL_SUFFIXES = (S1, )
+GD1 = Suffix("-sız", "sız|siz|suz|süz", None, True)
+
+# S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
+# S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
+# S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
+# S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
+# S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
+# S1 = Suffix("-lU", "lı|li|lu|lü", None, True)
+
+DERIVATIONAL_SUFFIXES = (S1, GD1)
 #############################################
 
 S11 = Suffix("-cAsInA",    "casına|çasına|cesine|çesine",      None, True)
@@ -30,7 +39,9 @@ S13 = Suffix("-(y)sA",     "sa|se|ysa|yse",                    "y",  True)
 S6  = Suffix("-m",         "m",                                None, True)
 S7  = Suffix("-n",         "n",                                None, True)
 S8  = Suffix("-k",         "k",                                None, True)
-NOMINAL_VERB_SUFFIXES = (S11,S4,S14,S15,S2,S5,S9,S10,S3,S1,S12,S13,S6,S7,S8)
+GIV1 = Suffix("-ebilir",    "ebilir|abilir",                   None, True)
+
+NOMINAL_VERB_SUFFIXES = (S11,S4,S14,S15,S2,S5,S9,S10,S3,S1,S12,S13,S6,S7,S8, GIV1)
 #############################################
 
 S16 = Suffix("-nDAn",     "ndan|ntan|nden|nten",      None,       True)

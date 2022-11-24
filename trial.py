@@ -45,23 +45,23 @@ tokenizer = Tokenizer()
 tokenizer.setText(text)
 tokenizer.run()
 words = tokenizer.tokens
-print("Tokenization :",words)
+print("\tTokenization :",words)
 
 sentSplit = SentenceSplitter(text)
 sentSplit.run()
 print(sentSplit.sentences_types)
-print("Sentences :", sentSplit.sentences)
+print("\tSentences :", sentSplit.sentences)
 
 
 normalizer = Normalizer()
 normalizer.setText(words)
 words = normalizer.new_words
-print("Normalization :",words)
+print("\tNormalization :",words)
 
 stemmer = Stemmer()
 stemmer.setText(words)
 words = stemmer.stems
-print("Stemming :",words)
+print("\tStemming :",words)
 
 words = stopword_elimination(stemmer.stems)
-print("Stopword :",words)
+print("\tStopword :",words)
