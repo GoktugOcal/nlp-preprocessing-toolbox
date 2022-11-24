@@ -3,6 +3,10 @@ from nlp_preprocessing_toolbox.helper import *
 import numpy as np
 import re
 
+with open("nlp_preprocessing_toolbox/data/abrv.txt", "r", encoding="utf-8") as abrv_file:
+    text = abrv_file.read()
+    abrv_list = [line.split("\t")[0] for line in text.split("\n")]
+    
 class Tokenizer:
     def __init__(self):
         self.text = ""
@@ -26,7 +30,7 @@ class Tokenizer:
                 next_item = splitted_text[idx+1].split(" ")
                 splitted_text[idx] = splitted_text[idx].replace("-",next_item[0])
                 splitted_text[idx + 1] = splitted_text[idx + 1][len(next_item[0]):]
-                print(next_item[0])
+                # print(next_item[0])
                 #.replace(next_item[0],"")
         
         self.text = "\n".join(splitted_text)
@@ -61,12 +65,23 @@ class Tokenizer:
                     spans.append((x, y))
                     types.append(s_type)
                     [span_set.add(x) for x in range(x, y)]
+
         
         #sort tokens and types by span indexes
         spans_type = list(zip(spans, types))
         spans_type.sort(key=lambda l: l[0][0])
-        self.spans = [x for x, y in spans_type]
-        self.types = [y for x, y in spans_type]
+
+        spans_type_last = []
+        for i in range(len(spans_type)):
+            if spans_type[i][1] == "eos" and spans_type[i-1][1] == "word":
+                if self.text[spans_type[i-1][0][0]:spans_type[i][0][1]].lower().replace(" " ,"") in abrv_list:
+                    spans_type_last.pop()
+                    spans_type_last.append(((spans_type[i-1][0][0],spans_type[i][0][1]),"word"))
+                else: spans_type_last.append(spans_type[i])
+            else: spans_type_last.append(spans_type[i])
+
+        self.spans = [x for x, y in spans_type_last]
+        self.types = [y for x, y in spans_type_last]
 
         #set tokens
         self.tokens = [self.text[self.spans[i][0]:self.spans[i][1]] for i in range(len(self.spans))]

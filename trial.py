@@ -50,7 +50,7 @@ sentSplit = SentenceSplitter(text)
 sentSplit.run()
 print(sentSplit.sentences_types)
 print("\tSentences :", sentSplit.sentences)
-
+exit()
 
 normalizer = Normalizer()
 normalizer.setText(words)
