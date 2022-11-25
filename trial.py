@@ -1,4 +1,4 @@
-from nlp_preprocessing_toolbox.tokenizer import Tokenizer
+from nlp_preprocessing_toolbox.tokenizer import Tokenizer, TokenizerML
 from nlp_preprocessing_toolbox.sentence_splitter import SentenceSplitter
 from nlp_preprocessing_toolbox.normalizer import Normalizer
 from nlp_preprocessing_toolbox.stemmer import Stemmer
@@ -40,17 +40,18 @@ Sonra dedi ki "Ben seni sevmiyorum."'''
 # malıyız bu işi. Tamam mı? Benimle goktugocal41@gmail.com 
 # adresinden iletişime geçebilirsin.'''
 
-tokenizer = Tokenizer()
+tokenizer = TokenizerML()
 tokenizer.setText(text)
 tokenizer.run()
 words = tokenizer.tokens
 print("\tTokenization :",words)
+exit()
+
 
 sentSplit = SentenceSplitter(text)
 sentSplit.run()
 print(sentSplit.sentences_types)
 print("\tSentences :", sentSplit.sentences)
-exit()
 
 normalizer = Normalizer()
 normalizer.setText(words)

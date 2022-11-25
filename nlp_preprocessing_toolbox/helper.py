@@ -1,4 +1,27 @@
 from difflib import ndiff
+import re
+import conllu
+import string
+import pandas as pd
+from tqdm import tqdm
+
+def __fixation(text):
+        
+        text = unitoascii(text).replace("''", '"')
+        text = '\n'.join([line for line in text.split('\n') if line.strip() != '']) #remove empty lines
+        text = re.sub(' +', ' ', text) #reduce multiple whitespaces to one
+
+        splitted_text = text.split("\n")
+        for idx in range(len(splitted_text)):
+            if splitted_text[idx].endswith("-"):
+                next_item = splitted_text[idx+1].split(" ")
+                splitted_text[idx] = splitted_text[idx].replace("-",next_item[0])
+                splitted_text[idx + 1] = splitted_text[idx + 1][len(next_item[0]):]
+                # print(next_item[0])
+                #.replace(next_item[0],"")
+        
+        text = "\n".join(splitted_text)
+        return text
 
 def levenshtein_distance(str1, str2, ):
     counter = {"+": 0, "-": 0}
@@ -72,3 +95,105 @@ def unitoascii(string: str) -> str:
         return _decode(string)
 
     return string
+
+
+
+def tokenizer_load_and_parse_corpus(save = True):
+
+    print("\tParsing the corpus.")
+    data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-train.conllu", "r", encoding="utf-8")
+    # data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-Penn/tr_penn-ud-train.conllu", "r", encoding="utf-8")
+
+    text = data_file.read()
+
+    df = pd.DataFrame()
+
+    lines = []
+
+    new_text = " "
+    labels = []
+    for item in tqdm(conllu.parse(text)):
+        last_id = 0
+        for i in range(len(item)):
+            
+            if type(item[i]["id"]) == tuple:
+                if item[i]["id"][0] > last_id: valid = True
+                else: continue
+            else:
+                if item[i]["id"] > last_id: valid = True
+                else: continue
+
+            if type(item[i]["id"]) == tuple: last_id = item[i]["id"][-1]
+            else: last_id = item[i]["id"]
+
+            ##########################
+            token = item[i]["form"]
+            iter_len = len(token)
+            
+
+            for idx in range(iter_len):
+
+                if idx == iter_len-1: label = 1
+                else: label = 0
+                new_text += token[idx]
+                
+                labels.append(label)
+                
+                row = {
+                    "char" : token[idx],
+                    "label" : label
+                }
+                lines.append(row)
+                
+            try:
+                if item[i]["misc"]["SpaceAfter"] == "No": pass
+                else: 
+                    new_text = new_text + " "
+                    row = {
+                        "char" : " ",
+                        "label" : 0
+                    }
+                    lines.append(row)
+            except:
+                new_text = new_text + " "
+                row = {
+                    "char" : " ",
+                    "label" : 0
+                }
+                lines.append(row)
+
+    df_raw = pd.DataFrame.from_records(lines)
+    if save: df_raw.to_csv("example.csv", index=False)
+
+    return df_raw
+
+def logistic_regression_preprocesing(df_raw):
+
+    df_raw["t-1"] = df_raw.char.shift(1)
+    df_raw["t-2"] = df_raw.char.shift(2)
+    df_raw["t+1"] = df_raw.char.shift(-1)
+    df_raw["t+2"] = df_raw.char.shift(-2)
+
+    for col in ["char", "t-1", "t-2", "t+1", "t+2"]:
+        df_raw[col + "_punc"] = [True if (str(val) in string.punctuation) else False for val in df_raw[col].values]
+        df_raw[col + "_num"] = [True if (str(val).isnumeric()) else False for val in df_raw[col].values]    
+        df_raw[col + "_space"] = [True if (str(val) == " ") else False for val in df_raw[col].values]    
+        df_raw[col + "_period"] = [True if (str(val) == "." ) else False for val in df_raw[col].values]
+        
+    df_raw = df_raw.dropna()
+
+    req_cols = ["char"]
+    for col in ["char", "t-1", "t-2", "t+1", "t+2"]:
+        for suff in ["_punc", "_num", "_space", "_period"]:
+            req_cols.append(col+suff)
+
+    try:
+        req_cols_2 = req_cols + ["label"]
+        df = df_raw[req_cols_2]
+    except:
+        df = df_raw[req_cols]
+
+    df_now = df[df.columns[1:]]
+    df_now = df_now.astype(int)
+    
+    return df, df_now

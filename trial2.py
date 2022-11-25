@@ -1,14 +1,25 @@
 data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-train.conllu", "r", encoding="utf-8")
 text = data_file.read()
 
-roots = set()
-for line in text.split("\n"):
-    if "#" not in line:
-        splitted = line.split("\t")
-        try: 
-            if splitted[3] == 'VERB': roots.add(line)
-        except: pass
+idx = 0
+dot_sent = []
+sentences = []
 
-for root in roots:
-    if "kabul" in root:
-        print(root)
+eos = []
+punc = []
+for line in text.split("\n"):
+    if "#" in line and "text = " in line:
+        sentence = line.split(" = ")[1]
+        # if sentence[-1] == "?": print(sentence)
+        sentences.append(sentence)
+        eos.append(sentence[len(sentence)-2:len(sentence)])
+        if "." in sentence[0:-2]:
+            idx = sentence[0:-2].find('.')
+            print(sentence)
+            print("\t", sentence[idx-2:idx+1])
+
+# print(len(dot_sent))
+# print(eos)
+# for root in roots:
+#     if "kabul" in root:
+#         print(root)
