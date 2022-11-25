@@ -94,6 +94,9 @@ class Tokenizer:
 
 
 class TokenizerML():
+    '''
+    Logistic Regression based tokenizer.
+    '''
 
     def __init__(self):
         self.text = ""

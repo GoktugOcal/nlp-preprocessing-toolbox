@@ -98,7 +98,7 @@ def unitoascii(string: str) -> str:
 
 
 
-def tokenizer_load_and_parse_corpus(save = True):
+def tokenizer_load_and_parse_corpus(save = False):
 
     print("\tParsing the corpus.")
     data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-train.conllu", "r", encoding="utf-8")
@@ -163,7 +163,7 @@ def tokenizer_load_and_parse_corpus(save = True):
                 lines.append(row)
 
     df_raw = pd.DataFrame.from_records(lines)
-    if save: df_raw.to_csv("example.csv", index=False)
+    if save: df_raw.to_csv("nlp_preprocessing_toolbox/data/tokenizer_parsed.csv", index=False)
 
     return df_raw
 
@@ -197,3 +197,97 @@ def logistic_regression_preprocesing(df_raw):
     df_now = df_now.astype(int)
     
     return df, df_now
+
+
+
+############# Sentence Splitting Tools
+
+
+def sentence_splitter_load_and_parse_corpus(save = False):
+
+    print("\tParsing the corpus.")
+    data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-BOUN/tr_boun-ud-train.conllu", "r", encoding="utf-8")
+    # data_file = open("nlp_preprocessing_toolbox/data/UD_Turkish-Penn/tr_penn-ud-train.conllu", "r", encoding="utf-8")
+
+    text = data_file.read()
+
+    df = pd.DataFrame()
+
+    lines = []
+
+    new_text = " "
+    labels = []
+
+    for item in tqdm(conllu.parse(text)):
+        last_id = 0
+        for i in range(len(item)):
+            
+            if type(item[i]["id"]) == tuple:
+                if item[i]["id"][0] > last_id: valid = True
+                else: continue
+            else:
+                if item[i]["id"] > last_id: valid = True
+                else: continue
+
+            if type(item[i]["id"]) == tuple: last_id = item[i]["id"][-1]
+            else: last_id = item[i]["id"]
+
+            ##########################
+            token = item[i]["form"]
+            iter_len = len(token)
+            
+
+            for idx in range(iter_len):
+
+                if idx == iter_len-1 and i == len(item)-1: label = 1
+                else: label = 0
+                new_text += token[idx]
+                
+                labels.append(label)
+                
+                row = {
+                    "char" : token[idx],
+                    "label" : label
+                }
+                lines.append(row)
+                
+            try:
+                if item[i]["misc"]["SpaceAfter"] == "No": pass
+                else: 
+                    new_text = new_text + " "
+                    row = {
+                        "char" : " ",
+                        "label" : 0
+                    }
+                    lines.append(row)
+            except:
+                new_text = new_text + " "
+                row = {
+                    "char" : " ",
+                    "label" : 0
+                }
+                lines.append(row)
+
+    df_raw = pd.DataFrame.from_records(lines)
+    if save: df_raw.to_csv("nlp_preprocessing_toolbox/data/sentence_splitter_parsed.csv", index=False)
+
+    return df_raw
+
+def naive_bayes_preprocessing(df_raw):
+    time_lags = [-1,+1]
+
+    for col in time_lags:
+        if col >= 0: df_raw["t+"+str(col)] = df_raw.char.shift(col)
+        else: df_raw["t"+str(col)] = df_raw.char.shift(col)
+
+    df_raw = df_raw.dropna()
+    
+    time_lags = [-1,1] 
+    for col in time_lags:
+        if col >= 0: df_raw["t+"+str(col)] = df_raw["t+"+str(col)].astype(str)
+        else: df_raw["t"+str(col)] = df_raw["t"+str(col)].astype(str)
+
+    df_raw["char"] = df_raw["char"].astype(str)
+    df_raw["text"] = [row["t-1"] + row["char"] + row["t+1"] for i, row in df_raw.iterrows()]
+    
+    return df_raw

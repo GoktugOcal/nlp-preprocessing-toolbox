@@ -1,8 +1,11 @@
 from nlp_preprocessing_toolbox.tokenizer import Tokenizer, TokenizerML
-from nlp_preprocessing_toolbox.sentence_splitter import SentenceSplitter
+from nlp_preprocessing_toolbox.sentence_splitter import SentenceSplitter, SentenceSplitterML
 from nlp_preprocessing_toolbox.normalizer import Normalizer
 from nlp_preprocessing_toolbox.stemmer import Stemmer
 from nlp_preprocessing_toolbox.stopword_elimination import stopword_elimination
+
+import warnings
+warnings.filterwarnings("ignore")
 
 
 text = '''Çünkü ben de o yaşadığı çevreyi kirleterek bozulmasına neden olan, tüm uyarılara
@@ -34,24 +37,25 @@ adresinden sitemizi inceleyebilirsin. 24 Eylül 2018 Pazartesi günü ge-
 lecekmiş. 19 Mayıs'ı coşkuyla kutladık.
 Sonra dedi ki "Ben seni sevmiyorum."'''
 
-# text = '''Saçma ve Gereksiz Bir Yazı.
-# Bakkaldan 5 TL'lik 2 çikola-
-# ta al. 12.02.2018 tarihinde saat tam 15:45'te yap-
-# malıyız bu işi. Tamam mı? Benimle goktugocal41@gmail.com 
-# adresinden iletişime geçebilirsin.'''
+text = '''Saçma ve Gereksiz Bir Yazı.
+Bakkaldan 5 TL'lik 2 çikola-
+ta al. 12.02.2018 tarihinde saat tam 15:45'te yap-
+malıyız bu işi. Tamam mı? Benimle goktugocal41@gmail.com 
+adresinden iletişime geçebilirsin.'''
 
-tokenizer = TokenizerML()
-tokenizer.setText(text)
-tokenizer.run()
-words = tokenizer.tokens
-print("\tTokenization :",words)
-exit()
+# tokenizer = TokenizerML()
+# tokenizer.setText(text)
+# tokenizer.run()
+# words = tokenizer.tokens
+# print("\tTokenization :",words)
 
 
-sentSplit = SentenceSplitter(text)
+
+sentSplit = SentenceSplitterML()
+sentSplit.setText(text)
 sentSplit.run()
-print(sentSplit.sentences_types)
 print("\tSentences :", sentSplit.sentences)
+exit()
 
 normalizer = Normalizer()
 normalizer.setText(words)
