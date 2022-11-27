@@ -9,7 +9,7 @@ This Turkish NLP Preprocessing Toolbox have 5 functionalities:
     - Logistic Regression Based
 - Sentence Splitter
     - Regex Based
-    - Naive Bayesion Method Based
+    - Naive Bayesian Method Based
 - Normalizer
 - Stemmer
 - Stopword Eliminator
